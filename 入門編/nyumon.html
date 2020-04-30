@@ -9,39 +9,95 @@
 
     function init() {
 
-      // サイズを指定
-      const width = 960;
-      const height = 540;
+        //ウィンドウサイズ
+        const width = 960;
+        const height = 540;
 
-      // レンダラーを作成
-      const renderer = new THREE.WebGLRenderer({
-        canvas: document.querySelector('#myCanvas')
-      });
-      renderer.setPixelRatio(window.devicePixelRatio);
-      renderer.setSize(width, height);
+        //レンダラーを作成　idの＃を忘れずに！
+        const renderer = new THREE.WebGLRenderer({
+            canvas:document.querySelector('#myCanvas')
+            // canvas: document.querySelector('#myCanvas')
+        });
 
-      // シーンを作成
-      const scene = new THREE.Scene();
+        renderer.setPixelRatio(window.devicsePixelRatio);
+        renderer.setSize(width,height);
 
-      // カメラを作成
-      const camera = new THREE.PerspectiveCamera(45, width / height);
-      camera.position.set(0, 0, +1000);
+        //シーンの作成
+        const scene = new THREE.Scene();
 
-      // 箱を作成
-      const geometry = new THREE.BoxGeometry(400, 400, 400);
-      const material = new THREE.MeshNormalMaterial();
-      const box = new THREE.Mesh(geometry, material);
-      scene.add(box);
+        //カメラの作成
+        const camera = new THREE.PerspectiveCamera(45, width/height);//Cameraいる？
+        camera.position.set(0,0,+1000);
 
-      tick();
+        //ジオメトリの作成
+        const geometry = new THREE.BoxGeometry(400, 400, 400);
 
-      // 毎フレーム時に実行されるループイベントです
-      function tick() {
-        box.rotation.y += 0.01;
-        renderer.render(scene, camera); // レンダリング
+        //マテリアルの作成
+        const material = new THREE.MeshNormalMaterial({
 
-        requestAnimationFrame(tick);
-      }
+        });
+
+        //モデルの作成
+        const mesh = new THREE.Mesh(geometry,material);
+
+        //シーンにモデルを設定
+        scene.add(mesh);
+
+
+        //毎フレーム繰り返し呼ばれる
+        tick()
+
+        function tick(){
+
+            // let Rad =0;
+            // Rad += 0.01;
+            // mesh.rotateY(Rad);
+
+            mesh.rotation.y += 0.01;//Position Matrix
+
+            //レンダリング//Model Matrix, ViewMatrix
+            renderer.render(scene,camera);
+            //
+            requestAnimationFrame(tick);
+
+        }
+
+
+
+
+    //   // サイズを指定
+    //   const width = 960;
+    //   const height = 540;
+
+    //   // レンダラーを作成
+    //   const renderer = new THREE.WebGLRenderer({
+    //     canvas: document.querySelector('#myCanvas')
+    //   });
+    //   renderer.setPixelRatio(window.devicePixelRatio);
+    //   renderer.setSize(width, height);
+
+    //   // シーンを作成
+    //   const scene = new THREE.Scene();
+
+    //   // カメラを作成
+    //   const camera = new THREE.PerspectiveCamera(45, width / height);
+    //   camera.position.set(0, 0, +1000);
+
+    //   // 箱を作成
+    //   const geometry = new THREE.BoxGeometry(400, 400, 400);
+    //   const material = new THREE.MeshNormalMaterial();
+    //   const box = new THREE.Mesh(geometry, material);
+    //   scene.add(box);
+
+    //   tick();
+
+    //   // 毎フレーム時に実行されるループイベントです
+    //   function tick() {
+    //     box.rotation.y += 0.01;
+    //     renderer.render(scene, camera); // レンダリング
+
+    //     requestAnimationFrame(tick);
+    //   }
     }
   </script>
 </head>
