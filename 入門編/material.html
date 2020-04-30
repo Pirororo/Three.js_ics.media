@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/105/three.min.js"></script>
+  <script>
+    // ページの読み込みを待つ
+    window.addEventListener('load', init);
+
+    function init() {
+
+        //ウィンドウサイズ
+        const width = 960;
+        const height = 540;
+
+        //レンダラーを作成　idの＃を忘れずに！
+        const renderer = new THREE.WebGLRenderer({
+            canvas:document.querySelector('#myCanvas')
+            // canvas: document.querySelector('#myCanvas')
+        });
+
+        renderer.setPixelRatio(window.devicsePixelRatio);
+        renderer.setSize(width,height);
+
+        //シーンの作成
+        const scene = new THREE.Scene();
+
+        //カメラの作成
+        const camera = new THREE.PerspectiveCamera(45, width/height,1,10000);
+        camera.position.set(0,500,+1000);
+        camera.lookAt(new THREE.Vector3(0,0,0));
+
+        //ジオメトリの作成
+        const geometry = new THREE.BoxGeometry(400, 400, 400);
+        // const geometry = new THREE.SphereGeometry(300, 30, 30);
+
+        //絵のロード
+        const loader = new THREE.TextureLoader();
+        const texture = loader.load('imgs/earthmap1k.jpg');
+
+        //マテリアルの作成とマッピング
+        const material = new THREE.MeshStandardMaterial({
+            map: texture
+        });
+
+
+        // const material = new THREE.MeshStandardMaterial({
+        //     map: new THREE.TextureLoader().load('imgs/earthmap1k.jpg')
+        // });
+
+        //モデルの作成
+        const mesh = new THREE.Mesh(geometry,material);
+
+        //シーンにモデルを設定
+        scene.add(mesh);
+
+        // 平行光源
+        const directionalLight = new THREE.DirectionalLight(0xffffff);
+        directionalLight.position.set(1, 1, 1);
+        // シーンに追加
+        scene.add(directionalLight);
+
+
+        //毎フレーム繰り返し呼ばれる
+        tick();
+
+        function tick(){
+
+            mesh.rotation.y += 0.01;//Position Matrix
+            //レンダリング//Model Matrix, ViewMatrix
+            renderer.render(scene,camera);
+            requestAnimationFrame(tick);
+
+        }
+
+
+
+
+    }
+  </script>
+</head>
+<body>
+  <canvas id="myCanvas"></canvas>
+</body>
+</html>
