@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/105/three.min.js"></script>
+  <script src="js/OrbitControls.js"></script>
+  <script>
+    // ページの読み込みを待つ
+    window.addEventListener('load', init);
+
+    function init() {
+
+        const width = 960;
+        const height = 540;
+
+        const renderer = new THREE.WebGLRenderer({
+            canvas:document.querySelector('#myCanvas')
+        });
+        renderer.setSize(width,height);
+
+
+        const scene = new THREE.Scene();
+
+        //カメラの作成
+        const camera = new THREE.PerspectiveCamera(45, width/height);
+        camera.position.set(0,0,+1000);
+
+
+        // カメラコントローラーを作成
+        const controls = new THREE.OrbitControls(camera);
+
+        // 滑らかにカメラコントローラーを制御する
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.2;
+
+
+
+        const mesh 
+        = new THREE.Mesh(new THREE.BoxGeometry(400, 400, 400), new THREE.MeshNormalMaterial());
+        scene.add(mesh);
+
+        tick();
+        function tick(){
+
+            mesh.rotation.y += 0.01;//Position Matrix
+
+            //controlを更新！！Dampinfのときだけ必要〜
+            controls.update();
+
+            //レンダリング//Model Matrix, ViewMatrix
+            renderer.render(scene,camera);
+            //
+            requestAnimationFrame(tick);
+
+        }
+    }
+
+  </script>
+</head>
+<body>
+
+  <canvas id="myCanvas"></canvas>
+</body>
+</html>
+
+

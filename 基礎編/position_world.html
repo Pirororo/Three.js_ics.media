@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/105/three.min.js"></script>
+  <script>
+    // ページの読み込みを待つ
+    window.addEventListener('load', init);
+
+    function init() {
+
+
+        const width = 960;
+        const height = 540;
+        //変数
+        let rad = 0;//初期値がないと画面まっくらになるよ！！！！！！
+        let mouseX = 0;
+
+
+        //レンダラーを作成　idの＃を忘れずに！
+        const renderer = new THREE.WebGLRenderer({
+            canvas:document.querySelector('#myCanvas')
+        });
+
+        renderer.setPixelRatio(window.devicsePixelRatio);
+        renderer.setSize(width,height);
+
+        //シーンの作成
+        const scene = new THREE.Scene();
+
+        //カメラの作成
+        const camera = new THREE.PerspectiveCamera(45, width/height,1,10000);
+        camera.position.set(0,500,+1000);
+        camera.lookAt(new THREE.Vector3(0,0,0));
+
+        //ジオメトリの作成
+        // const geometry = new THREE.SphereGeometry(300, 30, 30);
+        var geometry = new THREE.Geometry();
+
+        geometry.vertices.push(
+            new THREE.Vector3( -10,  10, 0 ),
+            new THREE.Vector3( -10, -10, 0 ),
+            new THREE.Vector3(  10, -10, 0 )
+        );
+
+        geometry.faces.push( new THREE.Face3( 0, 1, 2 ) );
+
+        geometry.computeBoundingSphere();
+
+        //絵のロード
+        const loader = new THREE.TextureLoader();
+        const texture = loader.load('imgs/earthmap1k.jpg');
+
+        //マテリアルの作成とマッピング
+        const material = new THREE.MeshStandardMaterial({
+            map: texture
+        });
+
+        // const material = new THREE.MeshStandardMaterial({
+        //     map: new THREE.TextureLoader().load('imgs/earthmap1k.jpg')
+        // });
+
+        //モデルの作成
+        const meshEarth = new THREE.Mesh(geometry,material);
+
+        //シーンにモデルを設定
+        scene.add(meshEarth);
+
+        // 平行光源
+        const directionalLight = new THREE.DirectionalLight(0xffffff);
+        directionalLight.position.set(1, 1, 1);
+        
+        // シーンに追加
+        scene.add(directionalLight);
+
+
+
+        createStarField();
+
+        function createStarField(){
+            const geometry = new THREE.Geometry();
+            for(let i =0; i < 1000; i++){
+                geometry.vertices.push(
+                    new THREE.Vector3(
+                        3000 * (Math.random()-0.5),
+                        3000 * (Math.random()-0.5),
+                        3000 * (Math.random()-0.5)
+                    )
+                )
+            }
+
+            const material = new THREE.PointsMaterial({
+                color: 0xffffff,
+                size: 10
+            });
+
+            const meshStar = new THREE.Points(geometry, material);
+            scene.add(meshStar);
+
+        }
+
+
+        //マウスイベント
+        document.addEventListener('mousemove', event =>{
+            mouseX = event.pageX;
+        });
+
+
+        //毎フレーム繰り返し呼ばれる
+        tick();
+
+        function tick(){
+
+            let targetRad = mouseX/width*(2*Math.PI);
+            rad += (targetRad - rad)*0.01;
+            camera.position.x = 1000 * Math.sin(rad);
+            camera.position.z = 1000 * Math.cos(rad);
+            camera.lookAt(new THREE.Vector3(0,0,0));
+
+
+            meshEarth.rotation.y += 0.01;//Position Matrix
+            //レンダリング//Model Matrix, ViewMatrix
+            renderer.render(scene,camera);
+            requestAnimationFrame(tick);
+
+        }
+
+
+    }
+  </script>
+</head>
+<body>
+  <canvas id="myCanvas"></canvas>
+</body>
+</html>
