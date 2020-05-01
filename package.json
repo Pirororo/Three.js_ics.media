@@ -1,0 +1,22 @@
+{
+  "name": "three.js_ics.media",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pirororo/Three.js_ics.media.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Pirororo/Three.js_ics.media/issues"
+  },
+  "homepage": "https://github.com/Pirororo/Three.js_ics.media#readme",
+  "dependencies": {
+    "three": "^0.116.0"
+  }
+}
