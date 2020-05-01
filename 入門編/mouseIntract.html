@@ -9,9 +9,14 @@
 
     function init() {
 
-        //ウィンドウサイズ
+
         const width = 960;
         const height = 540;
+        //変数
+        let rad = 0;//初期値がないと画面まっくらになるよ！！！！！！
+        let mouseX = 0;
+
+
 
         //レンダラーを作成　idの＃を忘れずに！
         const renderer = new THREE.WebGLRenderer({
@@ -30,8 +35,8 @@
         camera.lookAt(new THREE.Vector3(0,0,0));
 
         //ジオメトリの作成
-        const geometry = new THREE.BoxGeometry(400, 400, 400);
-        // const geometry = new THREE.SphereGeometry(300, 30, 30);
+        // const geometry = new THREE.BoxGeometry(400, 400, 400);
+        const geometry = new THREE.SphereGeometry(300, 30, 30);
 
         //絵のロード
         const loader = new THREE.TextureLoader();
@@ -42,22 +47,54 @@
             map: texture
         });
 
-
         // const material = new THREE.MeshStandardMaterial({
         //     map: new THREE.TextureLoader().load('imgs/earthmap1k.jpg')
         // });
 
         //モデルの作成
-        const mesh = new THREE.Mesh(geometry,material);
+        const meshEarth = new THREE.Mesh(geometry,material);
 
         //シーンにモデルを設定
-        scene.add(mesh);
+        scene.add(meshEarth);
 
         // 平行光源
         const directionalLight = new THREE.DirectionalLight(0xffffff);
         directionalLight.position.set(1, 1, 1);
+        
         // シーンに追加
         scene.add(directionalLight);
+
+
+
+        createStarField();
+
+        function createStarField(){
+            const geometry = new THREE.Geometry();
+            for(let i =0; i < 1000; i++){
+                geometry.vertices.push(
+                    new THREE.Vector3(
+                        3000 * (Math.random()-0.5),
+                        3000 * (Math.random()-0.5),
+                        3000 * (Math.random()-0.5)
+                    )
+                )
+            }
+
+            const material = new THREE.PointsMaterial({
+                color: 0xffffff,
+                size: 10
+            });
+
+            const meshStar = new THREE.Points(geometry, material);
+            scene.add(meshStar);
+
+        }
+
+
+        //マウスイベント
+        document.addEventListener('mousemove', event =>{
+            mouseX = event.pageX;
+        });
 
 
         //毎フレーム繰り返し呼ばれる
@@ -65,14 +102,19 @@
 
         function tick(){
 
-            mesh.rotation.y += 0.01;//Position Matrix
+            let targetRad = mouseX/width*(2*Math.PI);
+            rad += (targetRad - rad)*0.01;
+            camera.position.x = 1000 * Math.sin(rad);
+            camera.position.z = 1000 * Math.cos(rad);
+            camera.lookAt(new THREE.Vector3(0,0,0));
+
+
+            meshEarth.rotation.y += 0.01;//Position Matrix
             //レンダリング//Model Matrix, ViewMatrix
             renderer.render(scene,camera);
             requestAnimationFrame(tick);
 
         }
-
-
 
 
     }
