@@ -1,0 +1,110 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body {
+        /* bodyタグに余白が存在するので、それを消す */
+        margin: 0;
+        /* //スクロールすると画面枠以上に一瞬スクロールされる機能 */
+        overflow: hidden;
+      }
+    </style>
+    <script>
+      // ページの読み込みを待つ
+      window.addEventListener('load', init);
+
+      function init() {
+
+        const CELL_NUM = 25;
+
+        // レンダラーを作成
+        const renderer = new THREE.WebGLRenderer({
+          canvas: document.querySelector('#myCanvas'),
+          antialias: true
+        });
+
+        // シーンを作成
+        const scene = new THREE.Scene();
+
+        // カメラを作成
+        const camera = new THREE.PerspectiveCamera(45, 1.0);
+        camera.position.set(0, 0, +1000);
+
+
+
+        // 空のジオメトリを作成
+        const geometry = new THREE.Geometry();
+
+
+        for (let i = 0; i < CELL_NUM; i++) {
+          for (let j = 0; j < CELL_NUM; j++) {
+            for (let k = 0; k < CELL_NUM; k++) {
+              // 立方体個別の要素を作成
+              const meshTemp = new THREE.Mesh(new THREE.BoxGeometry(5, 5, 5));
+
+              // XYZ座標を設定
+              meshTemp.position.set(
+                // 10 * (i - CELL_NUM / 2),
+                // 10 * (j - CELL_NUM / 2),
+                // 10 * (k - CELL_NUM / 2)
+                10 * (i - CELL_NUM / 2),
+                10 * (j - CELL_NUM / 2),
+                10 * (k - CELL_NUM / 2)
+              );
+
+              // メッシュをマージ（結合）
+              geometry.mergeMesh(meshTemp);
+            }
+          }
+        }
+
+
+
+        // マテリアルを作成
+        const material = new THREE.MeshNormalMaterial();
+        // メッシュを作成
+        const mesh = new THREE.Mesh(geometry, material);
+        // 3D空間にメッシュを追加
+        scene.add(mesh);
+
+        tick();
+
+        // 毎フレーム時に実行されるループイベントです
+    
+    function tick() {
+
+          mesh.rotation.x += Math.PI / 180;
+          mesh.rotation.y += Math.PI / 180;
+          
+          // レンダリング
+          renderer.render(scene, camera);
+          requestAnimationFrame(tick);
+        }
+
+        // 初期化のために実行
+        onResize();
+        // リサイズイベント発生時に実行
+        window.addEventListener('resize', onResize);
+
+        function onResize() {
+          // サイズを取得
+          const width = window.innerWidth;
+          const height = window.innerHeight;
+
+          // レンダラーのサイズを調整する
+          renderer.setPixelRatio(window.devicePixelRatio);
+          renderer.setSize(width, height);
+
+          // カメラのアスペクト比を正す
+          camera.aspect = width / height;
+          camera.updateProjectionMatrix();
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <canvas id="myCanvas"></canvas>
+  </body>
+</html>
