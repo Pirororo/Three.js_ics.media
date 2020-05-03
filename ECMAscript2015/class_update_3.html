@@ -30,13 +30,6 @@
         camera.lookAt(new THREE.Vector3(0,0,0));
 
 
-        //トーラス
-        const geometry = new THREE.TorusGeometry(300, 100, 10, 30);
-        const material = new THREE.MeshNormalMaterial();
-        const meshTorus= new THREE.Mesh(geometry,material);
-        scene.add(meshTorus);
-
-
 
         const sp = new Sphere();
         scene.add(sp);
@@ -57,34 +50,58 @@
         function tick(){
 
             sp.update();
-            // sp.rotation.y += 0.01;
             
             renderer.render(scene,camera);
             requestAnimationFrame(tick);
-
         }
     }
 
     // class Sphere extends THREE.Group{
     class Sphere extends THREE.Object3D{
         constructor(){
+
             super();
-            //変数
+            //まる
+            // this.meshSphereGroup = new THREE.Group();
+            // this.add(this.meshSphereGroup);
             const Num = 6;
             for(let i = 0; i< Num; i++){
                 const geometry = new THREE.SphereGeometry(100, 30, 30);
                 const material = new THREE.MeshNormalMaterial();
-                const mesh = new THREE.Mesh(geometry, material);
+                // const meshSphere = new THREE.Mesh(geometry, material);
+                // const rad = i/Num*(2*Math.PI);
+                // meshSphere.position.x = 500 * Math.sin(rad);
+                // meshSphere.position.z = 500 * Math.cos(rad);
+                // // this.add(meshSphere);
+                // this.meshSphereGroup.add(meshSphere);
 
+                this.meshSphere = new THREE.Mesh(geometry, material);
                 const rad = i/Num*(2*Math.PI);
-                mesh.position.x = 500 * Math.sin(rad);
-                mesh.position.z = 500 * Math.cos(rad);
-                this.add(mesh);
+                this.meshSphere.position.x = 500 * Math.sin(rad);
+                this.meshSphere.position.z = 500 * Math.cos(rad);
+                this.add(this.meshSphere);
             }
+
+            //トーラス
+            const geometry = new THREE.TorusGeometry(300, 100, 10, 30);
+            const material = new THREE.MeshNormalMaterial();
+            // const meshTorus= new THREE.Mesh(geometry,material);
+            // this.add(meshTorus);
+
+            //const ではなくthisを使う！
+            this.meshTorus= new THREE.Mesh(geometry,material);
+            this.add(this.meshTorus);
+
         }
 
-        update(){
-            this.rotation.y += 0.01;
+        update() {
+
+            this.meshSphere.position.x = 200 * Math.sin(Date.now() / 500);
+            // this.meshSphereGroup.position.x = 200 * Math.sin(Date.now() / 500);
+
+            this.meshTorus.rotation.x += 0.01;
+
+            // this.rotation.x += 0.01;
         }
     }
   </script>
