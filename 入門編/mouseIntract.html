@@ -68,7 +68,7 @@
         createStarField();
 
         function createStarField(){
-            const geometry = new THREE.Geometry();
+            const geometry = new THREE.Geometry(4,16);
             for(let i =0; i < 1000; i++){
                 geometry.vertices.push(
                     new THREE.Vector3(
@@ -81,7 +81,9 @@
 
             const material = new THREE.PointsMaterial({
                 color: 0xffffff,
-                size: 10
+                size: 10,
+                opacity: 0.7,
+                transparent: true
             });
 
             const meshStar = new THREE.Points(geometry, material);
