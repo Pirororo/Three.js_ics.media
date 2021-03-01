@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/Pirororo/Three.js_ics.media#readme",
   "dependencies": {
-    "three": "^0.116.0"
+    "three": "^0.125.0"
   }
 }
